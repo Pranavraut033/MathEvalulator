@@ -1,7 +1,5 @@
 package com.Pranav.Phasor;
 
-import com.Pranav.Math.Mathematics;
-
 /**
  * Created on 22-04-17 at 02:36 PM
  *
@@ -53,7 +51,7 @@ public class Operators {
                 throw new ArithmeticException("Factorial of a floating point (" + leftArg + ") number cannot be found");
             if (leftArg < 0)
                 throw new ArithmeticException("Factorial of a negative number(" + leftArg + ")  cannot be found");
-            return Mathematics.fact(i);
+            return fact(i);
         }
     };
 
@@ -62,4 +60,9 @@ public class Operators {
                 addition, subtraction, multiplication, division, factorial, power
         };
     }
+    
+    public static long fact(int num) {
+        return num == 0 ? 1 : num * fact(num - 1);
+    }
+
 }
