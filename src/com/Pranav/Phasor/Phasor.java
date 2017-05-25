@@ -1,8 +1,8 @@
 package com.Pranav.Phasor;
 
-import com.Pranav.String.StringUtils;
+import com.Pranav.Phasor.StringUtils;
 
-import static com.Pranav.Array.DymArray.*;
+import static com.Pranav.Phasor.DymArray.*;
 import static com.Pranav.Phasor.ValidityHelper.ALL_CHARS;
 import static com.preon.Maths.out;
 
