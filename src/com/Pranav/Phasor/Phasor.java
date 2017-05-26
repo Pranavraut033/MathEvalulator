@@ -4,7 +4,6 @@ import com.Pranav.String.StringUtils;
 
 import static com.Pranav.Array.DymArray.*;
 import static com.Pranav.Phasor.ValidityHelper.ALL_CHARS;
-import static com.preon.Maths.out;
 
 /**
  * Created on 20-04-17 at 12:37 AM
@@ -28,38 +27,6 @@ class Phasor {
         this.operators = evaluator.getOperators();
         this.variables = evaluator.getVariables();
         expression = evaluator.getExpression();
-
-        solveVar();
-    }
-
-    private void solveVar() {
-        for (Variable variable : variables) {
-            String value = String.valueOf(variable.getVariableValue());
-            StringUtils v = new StringUtils(variable.getVariableName());
-            if (expression.contains(v.getS())) {
-                int t = new StringUtils(expression).getIndexOfFirstString(v.getS());
-                expression = (expression.charAt(t - 1) + "").matches("[" + ALL_CHARS + "(]") ?
-                        expression.replaceAll(v.getS(), value) : expression.replaceAll(v.getS(), "*" + value);
-            }
-        }
-    }
-
-    private void solveFun() throws Exception {
-        for (Function function : functions) {
-            String n = function.getName(), s;
-            StringUtils utils = new StringUtils(expression);
-            while (expression.contains(n)) {
-                int sIndex = utils.getIndexOfFirstString(n) + n.length() + 1;
-                int eIndex = utils.getParaEndL(sIndex) - 1;
-                String[] strings = (s = utils.getTrimString(sIndex, eIndex)).split(",");
-                if (strings.length == function.getNumArg()) {
-                    double[] doubles = new double[strings.length];
-                    for (int i = 0; i < strings.length; i++) doubles[i] = phase(strings[i]);
-                    expression = expression.replace(n + "(" + s + ")",
-                            String.valueOf(function.call(doubles)));
-                } else throw new Exception("Function '" + function.getName() + "' having mismatched arguments");
-            }
-        }
     }
 
     double phase() throws Exception {
@@ -67,32 +34,64 @@ class Phasor {
         return result = phase(expression);
     }
 
+    private String solveVar(String expression) {
+        expression = "0+" + expression;
+        for (Variable variable : variables) {
+            String value = String.valueOf(variable.getVariableValue());
+            StringUtils v = new StringUtils(variable.getVariableName());
+            if (expression.contains(v.getS())) {
+                int t = new StringUtils(expression).sGetIndexOfFirstChar(v.getS());
+                expression = isOperator(expression.charAt(t - 1)) ?
+                        expression.replaceAll(v.getS(), value) : expression.replaceAll(v.getS(), "*" + value);
+            }
+        }
+        return expression;
+    }
+
+    private void solveFun() throws Exception {
+        for (Function function : functions) {
+            String n = function.getName(), s;
+            StringUtils utils = new StringUtils(expression);
+            while (expression.contains(n)) {
+                int sIndex = utils.sGetIndexOfFirstChar(n) + n.length() + 1;
+                int eIndex = utils.getParaEndL(sIndex) - 1;
+                String[] strings = (s = utils.getTrimString(sIndex, eIndex)).split(",");
+                if (strings.length == function.getNumArg()) {
+                    double[] doubles = new double[strings.length];
+                    for (int i = 0; i < strings.length; i++) doubles[i] = phase(strings[i]);
+                    expression = expression.replace(n + "(" + s + ")",
+                            String.valueOf(function.call(doubles)));
+                } else throw new Exception("Function '" + function.getName() + "' have mismatched arguments");
+            }
+        }
+    }
+
+
     private double phase(String expression) throws Exception {
         while (containPara(expression)) {
-            String d = String.valueOf(recursivePara(expression)).replace('-', '~');
+            String d = String.valueOf(findCore(expression)).replace('-', '~');
             expression = expression.replace("(" + lastSolvedEx + ")", d);
         }
         return solve2(expression);
     }
 
-
-    private double recursivePara(String s) throws Exception {
-        return containPara(s) ? recursivePara(getParaString(s)) : solve2(s);
-    }
-
-    private boolean containPara(String s) {
-        return s.matches(".*[(].*[)].*$");
+    private double findCore(String s) throws Exception {
+        return containPara(s) ? findCore(getParaString(s)) : solve2(s);
     }
 
     private double solve2(String s) throws Exception {
-        char[] chars = (lastSolvedEx = s).toCharArray();
+        lastSolvedEx = s;
+        s = solveVar(s);
+        if (!containsOperator(s))
+            return getDouble(s);
+        char[] chars = s.toCharArray();
         double[] operands = new double[0];
         char[] operators = new char[0];
         StringBuilder sNumber = new StringBuilder();
         Operator o = null;
         for (char c : chars) {
             if ((c + "").matches("[0-9.~eE]")) sNumber.append(c);
-            else if ((c + "").matches("[" + ALL_CHARS + "]")) {
+            else if (isOperator(c)) {
                 if (c == '-' && (sNumber.toString().isEmpty() || sNumber.toString().matches(".*[eE]"))) {
                     sNumber.append("~");
                     continue;
@@ -136,7 +135,9 @@ class Phasor {
             operands = idDYm(operands, oTemp[c].call(operands[c], operands[c + 1]), c + 1);
             oTemp = dDYm(oTemp, c);
         }
-        return operands[0];
+        if (Double.isFinite(operands[0]))
+            return operands[0];
+        else throw new ArithmeticException("result is not valid :" + operands[0]);
     }
 
     private Operator[] charsToOps(char[] chars) throws Exception {
@@ -158,7 +159,6 @@ class Phasor {
         return operators;
     }
 
-
     private double getDouble(String s) throws Exception {
         if (s.isEmpty()) throw new Exception(EXP);
         double d;
@@ -179,4 +179,17 @@ class Phasor {
         int start = utils.getParaStartL() + 1, end = utils.getIndexOfFirstChar(')') - 1;
         return containPara(s) ? utils.getTrimString(start, end) : utils.getS();
     }
+
+    private boolean containsOperator(String s) {
+        return s.matches(".*[" + ALL_CHARS + "].*$");
+    }
+
+    private boolean containPara(String s) {
+        return s.matches(".*[(].*[)].*$");
+    }
+
+    private boolean isOperator(char c) {
+        return (c + "").matches("[" + ALL_CHARS + "]");
+    }
+
 }

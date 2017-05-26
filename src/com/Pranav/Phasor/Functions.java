@@ -1,8 +1,5 @@
 package com.Pranav.Phasor;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-
 /**
  * Created on 20-04-17 at 12:37 AM
  *
@@ -92,8 +89,6 @@ public class Functions {
         this.isDeg = isDeg;
     }
 
-    @NotNull
-    @Contract(pure = true)
     private Function getPowerFun(String name, double power) {
         boolean b = name.equals("pow");
         return new Function(name, b ? 2 : 1) {

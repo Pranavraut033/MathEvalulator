@@ -54,7 +54,7 @@ class ValidityHelper {
      * @throws IllegalCharsetNameException when @param operatorChar is not valid.
      */
     static boolean checkValidity(String expression) throws Exception {
-        if(expression.isEmpty())
+        if (expression.isEmpty())
             throwExp("Expression is empty");
         String t = primitiveCharacters.replace("-", "");
         boolean b = expression.matches(".*[" + t + "]{2}.*$");

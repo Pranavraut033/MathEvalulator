@@ -15,15 +15,6 @@ public abstract class Variable {
         this.variableName = variableName;
     }
 
-    /**
-     * @return A Constant or A Varying Value
-     */
-    public abstract double getVariableValue();
-
-    public String getVariableName() {
-        return variableName;
-    }
-
     public static Variable createAlias(Variable aliasOf, String variableName) {
         return new Variable(variableName) {
             @Override
@@ -31,5 +22,14 @@ public abstract class Variable {
                 return aliasOf.getVariableValue();
             }
         };
+    }
+
+    /**
+     * @return A Constant or A Varying Value
+     */
+    public abstract double getVariableValue();
+
+    public String getVariableName() {
+        return variableName;
     }
 }

@@ -1,8 +1,5 @@
 package com.Pranav.String;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
-
 /**
  * Created on 24-04-17 at 19:33
  *
@@ -26,7 +23,7 @@ public class StringUtils {
      * @param c Character to count in given String s
      * @return number of given character c in given String s
      */
-    public static int getCharCount(@NotNull String s, char c) {
+    public static int getCharCount(String s, char c) {
         int count = 0;
         char chars[] = s.toCharArray();
         for (char t : chars)
@@ -103,14 +100,11 @@ public class StringUtils {
         return i;
     }
 
-
-    @Nullable
-    public Integer getIndexOfFirstString(String key) {
-        return getIndexOfFirstString(s, key);
+    public Integer sGetIndexOfFirstChar(String key) {
+        return sGetIndexOfFirstChar(s, key);
     }
-
-    @Nullable
-    public static Integer getIndexOfFirstString(String source, String s) {
+    
+    public static Integer sGetIndexOfFirstChar(String source, String s) {
         char[] key = s.toCharArray(), chars = source.toCharArray();
         int j, i, k;
         for (i = 0; i < chars.length; i++) {
