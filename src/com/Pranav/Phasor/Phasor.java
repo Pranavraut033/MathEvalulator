@@ -1,8 +1,8 @@
 package com.Pranav.Phasor;
 
-import com.Pranav.String.StringUtils;
+import com.Pranav.Phasor.StringUtils;
 
-import static com.Pranav.Array.DymArray.*;
+import static com.Pranav.Phasor.DymArray.*;
 import static com.Pranav.Phasor.ValidityHelper.ALL_CHARS;
 
 /**
@@ -179,6 +179,7 @@ class Phasor {
         int start = utils.getParaStartL() + 1, end = utils.getIndexOfFirstChar(')') - 1;
         return containPara(s) ? utils.getTrimString(start, end) : utils.getS();
     }
+<<<<<<< HEAD
 
     private boolean containsOperator(String s) {
         return s.matches(".*[" + ALL_CHARS + "].*$");
@@ -193,3 +194,6 @@ class Phasor {
     }
 
 }
+=======
+}
+>>>>>>> origin/master

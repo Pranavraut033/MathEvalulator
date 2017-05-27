@@ -2,7 +2,7 @@ package com.Pranav.Phasor;
 
 import java.nio.charset.IllegalCharsetNameException;
 
-import static com.Pranav.String.StringUtils.getCharCount;
+import static com.Pranav.Phasor.StringUtils.getCharCount;
 
 /**
  * Created on 22-04-17 at 14:41
